@@ -1,0 +1,16 @@
+{
+  "name": "eloquentNode",
+  "version": "1.0.0",
+  "description": "Excercises from Eloquent JavaScript for the node chapter",
+  "main": "beautifulWeb/fileServer.js",
+  "dependencies": {
+    "mime": "^1.3.4",
+    "promise": "^7.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

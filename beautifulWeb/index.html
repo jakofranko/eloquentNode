@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>A Beautiful Web</title>
+</head>
+<body>
+	<h1>A Beautiful Web</h1>
+		<label for="page-title">Page Title</label>
+		<br>
+		<input type="text" name="page-title" id="page-title">
+		<select name="pages" id="pages">
+			<option value="">New Page</option>
+		</select>
+		<br>
+		<label for="actions">Action</label>
+		<select name="actions" id="actions">
+			<option value="GET">GET</option>
+			<option value="PUT">PUT</option>
+			<option value="DELETE">DELETE</option>
+		</select>
+		<br>
+		<label for="page-content">HTML</label>
+		<br>
+		<textarea name="page-content" id="page-content" cols="30" rows="10"></textarea>
+		<br>
+		<button type="button">Submit</button>
+	<script>
+		var title = document.querySelector("#page-title");
+		var actionSelect = document.querySelector("#actions");
+		var pageContent = document.querySelector("#page-content");
+		var pageSelect = document.querySelector("#pages");
+		var submit = document.querySelector("button");
+
+		function getPages() {
+			var req = new XMLHttpRequest();
+			req.open('get', 'http://localhost:8000/', false);	
+			req.send();
+			return req.responseText.split("\n").filter(function(page) {
+				return (page.search(/\.html$/) != -1 && page !== "index.html");
+			});
+		}
+
+		pageSelect.addEventListener("change", function(event) {
+			if(event.target.value != "") {
+				var req = new XMLHttpRequest();
+				req.open('get', 'http://localhost:8000/' + event.target.value, false);
+				req.send();
+				pageContent.value = req.responseText;
+				title.value = event.target.value.replace(/.html$/, "");
+			} else {
+				pageContent.value = "";
+				title.value = "";
+			}
+		});
+		getPages().forEach(function(page) {
+			var option = document.createElement("option");
+			option.appendChild(document.createTextNode(page));
+			pageSelect.appendChild(option);
+		});
+
+		submit.addEventListener("click", function(event) {
+			if(title.value == "index") {
+				alert("You can't do that, fool!");
+				return false
+			}
+			
+			var req = new XMLHttpRequest();
+			console.log(actionSelect, actionSelect.value);
+			req.open(actionSelect.value, 'http://localhost:8000/' + title.value + '.html', false);
+			if(actionSelect.value == "PUT")
+				req.send(pageContent.value);
+			else
+				req.send(null);
+			location.pathname = "/" + title.value + '.html';
+		});
+	</script>
+</body>
+</html>
