@@ -37,7 +37,7 @@ router.add("GET", /^\/talks$/, function(request, response, title) {
 router.add("DELETE", /^\/talks\/([^\/]+)$/, function(request, response, title) {
 	if(title in talks) {
 		delete talks[title];
-		registerChange(title);
+		registerChanges(title);
 	}
 	respond(response, 204, null);
 });
@@ -52,7 +52,7 @@ router.add("PUT", /^\/talks\/([^\/]+)$/, function(request, response, title) {
 							presenter: talk.presenter,
 							summary: talk.summary,
 							comments: []};
-			registerChange(title);
+			registerChanges(title);
 			respond(response, 204, null);
 		}
 
@@ -66,7 +66,7 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/, function(request, response, 
 			respond(response, 400, "Bad comment data");
 		} else if(title in talks) {
 			talks[title].comments.push(comment);
-			registerChange(title);
+			registerChanges(title);
 			respond(response, 204, null);
 		} else {
 			respond(response, 404, "No talk '" + title + "' found");
@@ -83,7 +83,7 @@ function respond(response, status, data, type) {
 };
 
 function respondJSON(response, status, data) {
-	respond(response, status, JSON.stringify(data)), "application/json");
+	respond(response, status, JSON.stringify(data), "application/json");
 };
 
 function readStreamAsJSON(stream, callback) {
@@ -103,10 +103,10 @@ function readStreamAsJSON(stream, callback) {
 };
 
 function sendTalks(talks, response) {
-  respondJSON(response, 200, {
-    serverTime: Date.now(),
-    talks: talks
-  });
+	respondJSON(response, 200, {
+		serverTime: Date.now(),
+		talks: talks
+	});
 };
 
 function waitForChanges(since, response) {
