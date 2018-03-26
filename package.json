@@ -4,7 +4,7 @@
   "description": "Excercises from Eloquent JavaScript for the node chapter",
   "main": "beautifulWeb/fileServer.js",
   "dependencies": {
-    "ecstatic": "^0.8.0",
+    "ecstatic": "~> 2.0.0",
     "mime": "^1.3.4",
     "promise": "^7.0.4"
   },
